@@ -9,11 +9,12 @@
 /* Begin PBXBuildFile section */
 		9181C6741B68CF0B0072E103 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9181C6731B68CF0B0072E103 /* main.m */; };
 		9181C6771B68CF0B0072E103 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9181C6761B68CF0B0072E103 /* AppDelegate.m */; };
-		9181C67A1B68CF0B0072E103 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9181C6791B68CF0B0072E103 /* ViewController.m */; };
 		9181C67D1B68CF0B0072E103 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9181C67B1B68CF0B0072E103 /* Main.storyboard */; };
 		9181C67F1B68CF0B0072E103 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9181C67E1B68CF0B0072E103 /* Assets.xcassets */; };
 		9181C6821B68CF0B0072E103 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9181C6801B68CF0B0072E103 /* LaunchScreen.storyboard */; };
 		9181C68D1B68CF0B0072E103 /* LibraryUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9181C68C1B68CF0B0072E103 /* LibraryUITests.m */; };
+		9181C6981B68CF1D0072E103 /* CoreSpotlight.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9181C6971B68CF1D0072E103 /* CoreSpotlight.framework */; };
+		9181C69B1B68CFF80072E103 /* LibraryTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9181C69A1B68CFF80072E103 /* LibraryTableViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,8 +32,6 @@
 		9181C6731B68CF0B0072E103 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		9181C6751B68CF0B0072E103 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		9181C6761B68CF0B0072E103 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		9181C6781B68CF0B0072E103 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		9181C6791B68CF0B0072E103 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		9181C67C1B68CF0B0072E103 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9181C67E1B68CF0B0072E103 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9181C6811B68CF0B0072E103 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -40,6 +39,9 @@
 		9181C6881B68CF0B0072E103 /* LibraryUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LibraryUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9181C68C1B68CF0B0072E103 /* LibraryUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LibraryUITests.m; sourceTree = "<group>"; };
 		9181C68E1B68CF0B0072E103 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9181C6971B68CF1D0072E103 /* CoreSpotlight.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreSpotlight.framework; path = System/Library/Frameworks/CoreSpotlight.framework; sourceTree = SDKROOT; };
+		9181C6991B68CFF80072E103 /* LibraryTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LibraryTableViewController.h; sourceTree = "<group>"; };
+		9181C69A1B68CFF80072E103 /* LibraryTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LibraryTableViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,6 +49,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9181C6981B68CF1D0072E103 /* CoreSpotlight.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,6 +66,7 @@
 		9181C6661B68CF0B0072E103 = {
 			isa = PBXGroup;
 			children = (
+				9181C6971B68CF1D0072E103 /* CoreSpotlight.framework */,
 				9181C6711B68CF0B0072E103 /* Library */,
 				9181C68B1B68CF0B0072E103 /* LibraryUITests */,
 				9181C6701B68CF0B0072E103 /* Products */,
@@ -83,13 +87,13 @@
 			children = (
 				9181C6751B68CF0B0072E103 /* AppDelegate.h */,
 				9181C6761B68CF0B0072E103 /* AppDelegate.m */,
-				9181C6781B68CF0B0072E103 /* ViewController.h */,
-				9181C6791B68CF0B0072E103 /* ViewController.m */,
 				9181C67B1B68CF0B0072E103 /* Main.storyboard */,
 				9181C67E1B68CF0B0072E103 /* Assets.xcassets */,
 				9181C6801B68CF0B0072E103 /* LaunchScreen.storyboard */,
 				9181C6831B68CF0B0072E103 /* Info.plist */,
 				9181C6721B68CF0B0072E103 /* Supporting Files */,
+				9181C6991B68CFF80072E103 /* LibraryTableViewController.h */,
+				9181C69A1B68CFF80072E103 /* LibraryTableViewController.m */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -211,7 +215,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9181C67A1B68CF0B0072E103 /* ViewController.m in Sources */,
+				9181C69B1B68CFF80072E103 /* LibraryTableViewController.m in Sources */,
 				9181C6771B68CF0B0072E103 /* AppDelegate.m in Sources */,
 				9181C6741B68CF0B0072E103 /* main.m in Sources */,
 			);
