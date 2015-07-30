@@ -1,0 +1,10 @@
+PODS:
+  - Hoko (2.1.1)
+
+DEPENDENCIES:
+  - Hoko (~> 2.1.1)
+
+SPEC CHECKSUMS:
+  Hoko: 4247653c45e359428a38c484c963caf89f2e84d7
+
+COCOAPODS: 0.37.2

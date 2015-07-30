@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import <CoreSpotlight/CoreSpotlight.h>
 
 @interface AppDelegate ()
 
@@ -41,5 +42,21 @@
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
+
+- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void(^)(NSArray *restorableObjects))restorationHandler {
+    
+    if ([[userActivity activityType] isEqualToString:CSSearchableItemActionType]) {
+        // This activity represents an item indexed using Core Spotlight, so restore the context related to the unique identifier.
+        // The unique identifier of the Core Spotlight item is set in the activity’s userInfo for the key CSSearchableItemActivityIdentifier.
+        NSString *uniqueIdentifier = [userActivity.userInfo objectForKey:CSSearchableItemActivityIdentifier];
+        NSLog(@"%@",uniqueIdentifier);
+        
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+        storyboard
+        
+    }
+    return YES;
+}
+
 
 @end

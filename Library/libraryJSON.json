@@ -1,0 +1,53 @@
+{
+  "books": [
+    {
+      "bookTitle": "A Noob's Guide to Dungeons and Dragons",
+      "bookID": "10001",
+      "author": "Sam Solomon",
+      "publishingHouse": "Brewmaster Publishers",
+      "genre": "Guide"
+    },
+    {
+      "bookTitle": "A Noob's Guide to Magic The Gathering",
+      "bookID": "10002",
+      "author": "Sam Solomon",
+      "publishingHouse": "Brewmaster Publishers",
+      "genre": "Guide"
+    },
+    {
+      "bookTitle": "A Noob's Guide to Being a Noob",
+      "bookID": "10003",
+      "author": "Shep Tweaker",
+      "publishingHouse": "Stage Left",
+      "genre": "Meta"
+    },
+    {
+      "bookTitle": "Sweaty Development : Aggressive Guide to Writing Code",
+      "bookID": "10004",
+      "author": "Sturm Drang",
+      "publishingHouse": "Brewmaster Publishers",
+      "genre": "Development Tools"
+    },
+    {
+      "bookTitle": "Existential Crisis : The Nil-Self Reference",
+      "bookID": "10005",
+      "author": "Johnny Trailblazer",
+      "publishingHouse": "Neverland Publishing House",
+      "genre": "Mystery"
+    },
+    {
+      "bookTitle": "A Night At Cubicle No. 42",
+      "bookID": "10006",
+      "author": "James Allen",
+      "publishingHouse": "Neverland Publishing House",
+      "genre": "Horror"
+    },
+    {
+      "bookTitle": "The Greeks : Why ARE They Broke?",
+      "bookID": "10007",
+      "author": "Sam Solomon",
+      "publishingHouse": "National History Museum",
+      "genre": "Science"
+    }
+  ]
+}

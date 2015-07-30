@@ -7,8 +7,18 @@
 //
 
 #import "LibraryTableViewController.h"
+#import "BookDetailViewController.h"
+#import <CoreSpotlight/CoreSpotlight.h>
+#import "BookTableViewCell.h"
+#import "Book.h"
 
 @interface LibraryTableViewController ()
+{
+    NSMutableArray *bookArray;
+    NSMutableArray *genreArray;
+    NSUserActivity *libraryActivity;
+    int viewType;
+}
 
 @end
 
@@ -16,12 +26,85 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    viewType = 0;
+    [self loadBooksFromLibraryAndIndexForSearch];
+    [self loadGenresAndIndexForSearch];
+    [self initActivities];
+    [self.tableView reloadData];
+}
+
+- (void)initActivities {
+    libraryActivity = [[NSUserActivity alloc] initWithActivityType:@"com.library"];
+    libraryActivity.title = @"Library";
+    libraryActivity.keywords = [NSSet setWithArray:@[]];
+    libraryActivity.userInfo = @{};
+    libraryActivity.eligibleForSearch = YES;
+}
+
+- (void)loadBooksFromLibraryAndIndexForSearch {
+    NSData *libraryData = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"libraryJSON" ofType:@"json"]];
     
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
+    NSArray *library = [[NSJSONSerialization JSONObjectWithData:libraryData options:kNilOptions error:nil] valueForKey:@"books"];
     
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    bookArray = [NSMutableArray new];
+    
+    for(NSDictionary *book in library) {
+        Book *tempBook = [[Book alloc] initWithDictionary:book];
+        [self indexBookForSearch:tempBook];
+        [bookArray addObject:tempBook];
+    }
+}
+
+- (void)loadGenresAndIndexForSearch {
+    NSData *genreData = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"genreData" ofType:@"json"]];
+    
+    genreArray = [NSMutableArray new];
+    genreArray = [[NSJSONSerialization JSONObjectWithData:genreData options:kNilOptions error:nil] valueForKey:@"genres"];
+    
+    for (NSString *genre in genreArray) {
+        [self indexGenre:genre];
+    }
+}
+
+- (IBAction)switchViewType:(id)sender {
+    if(viewType == 0) {
+        viewType = 1;
+    } else {
+        viewType = 0;
+    }
+    [self.tableView reloadData];
+}
+
+- (void) indexBookForSearch:(Book *)book {
+    [libraryActivity becomeCurrent];
+    
+    CSSearchableItemAttributeSet* attributeSet = [[CSSearchableItemAttributeSet alloc] initWithItemContentType:@"book"];
+    attributeSet.title = book.title;
+    attributeSet.authorNames = @[book.author];
+    attributeSet.publishers = @[book.publishingHouse];
+    attributeSet.genre = book.genre;
+    attributeSet.identifier = book.bookID;
+    attributeSet.contentDescription = [NSString stringWithFormat:@"Read '%@' using Library now", book.title];
+    
+    CSSearchableItem *item = [[CSSearchableItem alloc] initWithUniqueIdentifier:book.bookID domainIdentifier:@"com.library" attributeSet:attributeSet];
+    [[CSSearchableIndex defaultSearchableIndex] indexSearchableItems:@[item] completionHandler: ^(NSError * __nullable error) {
+        NSLog(@"Book indexed");
+    }];
+}
+
+- (void) indexGenre:(NSString *)genre {
+    [libraryActivity becomeCurrent];
+    
+    CSSearchableItemAttributeSet* attributeSet = [[CSSearchableItemAttributeSet alloc] initWithItemContentType:@"book"];
+    attributeSet.title = genre;
+    attributeSet.identifier = genre;
+    
+    attributeSet.contentDescription = [NSString stringWithFormat:@"Read '%@' books using Library now", genre];
+    
+    CSSearchableItem *item = [[CSSearchableItem alloc] initWithUniqueIdentifier:genre domainIdentifier:@"com.library" attributeSet:attributeSet];
+    [[CSSearchableIndex defaultSearchableIndex] indexSearchableItems:@[item] completionHandler: ^(NSError * __nullable error) {
+        NSLog(@"Genre indexed");
+    }];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -31,25 +114,40 @@
 
 #pragma mark - Table view data source
 
+-(NSString *)tableView:(nonnull UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    if(viewType == 0) {
+        return @"All Books";
+    } else {
+        return [genreArray objectAtIndex:section];
+    }
+}
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    
-    return 0;
+    if(viewType == 0) {
+        return 1;
+    } else {
+        return [genreArray count];
+    }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    
-    return 0;
+        return [bookArray count];
 }
 
-/*
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath  {
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
     
-    // Configure the cell...
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"cell"];
+    }
     
+    cell.textLabel.text = [[bookArray objectAtIndex:indexPath.row] title];
     return cell;
 }
-*/
+
+-(void)tableView:(nonnull UITableView *)tableView didSelectRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
+    [self performSegueWithIdentifier:@"goToDetail" sender:self];
+}
 
 /*
 // Override to support conditional editing of the table view.
@@ -85,14 +183,15 @@
 }
 */
 
-/*
 #pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    if([[segue destinationViewController] isKindOfClass:[BookDetailViewController class]]) {
+        BookDetailViewController *vc = [segue destinationViewController];
+        vc.book = [bookArray objectAtIndex:[[self.tableView indexPathForSelectedRow] row]];
+    }
 }
-*/
 
+- (IBAction)switch:(id)sender {
+}
 @end
