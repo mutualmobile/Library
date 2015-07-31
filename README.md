@@ -7,9 +7,3 @@ Sample application to demonstrate iOS 9's Proactive Search
 * Link to article
 * Wireframe-convert from current segue-based navigation
 * Comment code
-
-## Contributors
-
-**Sam Solomon
-**Shammi Didla
-**Mustafa Ali
