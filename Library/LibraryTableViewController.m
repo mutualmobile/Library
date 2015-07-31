@@ -17,7 +17,7 @@
     NSMutableArray *bookArray;
     NSMutableArray *genreArray;
     NSUserActivity *libraryActivity;
-    int viewType;
+    Book *bookToSend;
 }
 
 @end
@@ -26,7 +26,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    viewType = 0;
     [self loadBooksFromLibraryAndIndexForSearch];
     [self loadGenresAndIndexForSearch];
     [self initActivities];
@@ -66,17 +65,7 @@
     }
 }
 
-- (IBAction)switchViewType:(id)sender {
-    if(viewType == 0) {
-        viewType = 1;
-    } else {
-        viewType = 0;
-    }
-    [self.tableView reloadData];
-}
-
-- (void) indexBookForSearch:(Book *)book {
-    [libraryActivity becomeCurrent];
+- (void)indexBookForSearch:(Book *)book {
     
     CSSearchableItemAttributeSet* attributeSet = [[CSSearchableItemAttributeSet alloc] initWithItemContentType:@"book"];
     attributeSet.title = book.title;
@@ -92,8 +81,7 @@
     }];
 }
 
-- (void) indexGenre:(NSString *)genre {
-    [libraryActivity becomeCurrent];
+- (void)indexGenre:(NSString *)genre {
     
     CSSearchableItemAttributeSet* attributeSet = [[CSSearchableItemAttributeSet alloc] initWithItemContentType:@"book"];
     attributeSet.title = genre;
@@ -115,23 +103,15 @@
 #pragma mark - Table view data source
 
 -(NSString *)tableView:(nonnull UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    if(viewType == 0) {
-        return @"All Books";
-    } else {
-        return [genreArray objectAtIndex:section];
-    }
+    return @"All Books";
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    if(viewType == 0) {
-        return 1;
-    } else {
-        return [genreArray count];
-    }
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-        return [bookArray count];
+    return [bookArray count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath  {
@@ -146,7 +126,22 @@
 }
 
 -(void)tableView:(nonnull UITableView *)tableView didSelectRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
+    Book *book = [bookArray objectAtIndex:[[self.tableView indexPathForSelectedRow] row]];
+    [self goToDetailWithBook:book.bookID];
+}
+
+-(void)goToDetailWithBook:(NSString *)bookID {
+    bookToSend = [self getBookForBookID:bookID];
     [self performSegueWithIdentifier:@"goToDetail" sender:self];
+}
+
+-(Book *)getBookForBookID:(NSString *)bookID {
+    for(Book *book in bookArray){
+        if(bookID == book.bookID) {
+            return book;
+        }
+    }
+    return nil;
 }
 
 /*
@@ -183,12 +178,13 @@
 }
 */
 
-#pragma mark - Navigation
 
+
+#pragma mark - Navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if([[segue destinationViewController] isKindOfClass:[BookDetailViewController class]]) {
         BookDetailViewController *vc = [segue destinationViewController];
-        vc.book = [bookArray objectAtIndex:[[self.tableView indexPathForSelectedRow] row]];
+        vc.book = bookToSend;
     }
 }
 

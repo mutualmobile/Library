@@ -30,9 +30,10 @@
     publisher.text = self.book.publishingHouse;
     genre.text = self.book.genre;
     bookID.text = self.book.bookID;
-    
-    self.restorationClass = [self class];
-    self.restorationIdentifier = @"BookRestore";
+}
+
+- (void)dismissSelfAnimated:(BOOL)animated {
+    [self.navigationController popViewControllerAnimated:animated];
 }
 
 /*

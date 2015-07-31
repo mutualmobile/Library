@@ -15,4 +15,6 @@
 
 @property (strong,nonatomic) Book *book;
 
+- (void)dismissSelfAnimated:(BOOL)animated;
+    
 @end

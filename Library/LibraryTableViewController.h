@@ -10,4 +10,6 @@
 
 @interface LibraryTableViewController : UITableViewController
 
+- (void)goToDetailWithBook:(NSString *)bookID;
+
 @end
