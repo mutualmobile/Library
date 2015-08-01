@@ -8,6 +8,8 @@
 
 #import "AppDelegate.h"
 #import <CoreSpotlight/CoreSpotlight.h>
+#import "LibraryTableViewController.h"
+#import "BookDetailViewController.h"
 
 @interface AppDelegate ()
 
@@ -46,17 +48,19 @@
 - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void(^)(NSArray *restorableObjects))restorationHandler {
     
     if ([[userActivity activityType] isEqualToString:CSSearchableItemActionType]) {
-        // This activity represents an item indexed using Core Spotlight, so restore the context related to the unique identifier.
-        // The unique identifier of the Core Spotlight item is set in the activity’s userInfo for the key CSSearchableItemActivityIdentifier.
         NSString *uniqueIdentifier = [userActivity.userInfo objectForKey:CSSearchableItemActivityIdentifier];
-        NSLog(@"%@",uniqueIdentifier);
         
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-        storyboard
+        UINavigationController *rootNavigationController = (UINavigationController *)[self.window rootViewController];
         
+        if([[rootNavigationController topViewController] isKindOfClass:[BookDetailViewController class]]) {
+            BookDetailViewController *bookDetailViewControllerInstance = (BookDetailViewController *)[rootNavigationController topViewController];
+            [bookDetailViewControllerInstance dismissSelfAnimated:NO];
+        }
+        
+        LibraryTableViewController * libraryTableViewControllerInstance = [rootNavigationController.viewControllers firstObject];
+        [libraryTableViewControllerInstance goToDetailWithBook:uniqueIdentifier];
     }
     return YES;
 }
-
 
 @end
