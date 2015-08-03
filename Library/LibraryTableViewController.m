@@ -16,6 +16,10 @@
 
 @interface LibraryTableViewController ()
 {
+    //TODO:
+    // I prefer properties cause they have manual memory management, getter, setter advantages.
+    // If not, iVars should still have a unique way of identifying them (_ prefix or suffix) to
+    // differentiate from local variables.
     NSMutableArray *bookArray;
     NSMutableArray *genreArray;
     Book *bookToSend;
@@ -76,14 +80,17 @@
 
 - (void)indexGenre:(NSString *)genre {
     
+    //TODO: string literal "book" is used in multiple places, make it a constant
     CSSearchableItemAttributeSet* attributeSet = [[CSSearchableItemAttributeSet alloc] initWithItemContentType:@"book"];
     attributeSet.title = genre;
     attributeSet.identifier = genre;
     
     attributeSet.contentDescription = [NSString stringWithFormat:@"Read '%@' books using Library now", genre];
-    
+
+    //TODO: string literal "com.libary" is used in multiple places, make it a constant
     CSSearchableItem *item = [[CSSearchableItem alloc] initWithUniqueIdentifier:genre domainIdentifier:@"com.library" attributeSet:attributeSet];
     [[CSSearchableIndex defaultSearchableIndex] indexSearchableItems:@[item] completionHandler: ^(NSError * __nullable error) {
+        //TODO: log error or present an alert
         NSLog(@"Genre indexed");
     }];
 }
@@ -103,8 +110,11 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath  {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
     
+    //TODO: fixed, lower case `C` in cell
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+    
+    //TODO: this isn't required, deque handles it cause the cells are registered by the storyboard
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"cell"];
     }
