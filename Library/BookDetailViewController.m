@@ -32,7 +32,7 @@
     bookID.text = self.book.bookID;
 }
 
-- (void)dismissSelfAnimated:(BOOL)animated {
+- (void)dismissAnimated:(BOOL)animated {
     [self.navigationController popViewControllerAnimated:animated];
 }
 

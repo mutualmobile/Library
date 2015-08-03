@@ -10,7 +10,7 @@
 
 @implementation Book
 
--(id)initWithDictionary:(NSDictionary *)book {
+-(Book *)initWithDictionary:(NSDictionary *)book {
     if(self) {
         _title = [book valueForKey:@"bookTitle"];
         _author = [book valueForKey:@"author"];
