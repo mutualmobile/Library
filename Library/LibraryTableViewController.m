@@ -15,6 +15,8 @@
 #import "BookTableViewCell.h"
 
 static NSString * const kContentTypeBook = @"book";
+static NSString * const bookKVCIdentifier = @"books";
+static NSString * const genreKVCIdentifier = @"genres";
 static NSString * const kDomainIdentifierLibrary = @"com.library";
 static NSString * const kSectionHeaderForAllBooks = @"All Books";
 
@@ -38,7 +40,7 @@ static NSString * const kSectionHeaderForAllBooks = @"All Books";
 #pragma mark - Deserialization
 - (void)loadBooksFromLibraryAndIndexForSearch {
     NSData *libraryData = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"libraryJSON" ofType:@"json"]];
-    NSArray *library = [[NSJSONSerialization JSONObjectWithData:libraryData options:kNilOptions error:nil] valueForKey:@"books"];
+    NSArray *library = [[NSJSONSerialization JSONObjectWithData:libraryData options:kNilOptions error:nil] valueForKey:bookKVCIdentifier];
     
     self.bookArray = [NSMutableArray new];
     
@@ -53,7 +55,7 @@ static NSString * const kSectionHeaderForAllBooks = @"All Books";
     NSData *genreData = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"genreData" ofType:@"json"]];
     
     self.genreArray = [NSMutableArray new];
-    self.genreArray = [[NSJSONSerialization JSONObjectWithData:genreData options:kNilOptions error:nil] valueForKey:@"genres"];
+    self.genreArray = [[NSJSONSerialization JSONObjectWithData:genreData options:kNilOptions error:nil] valueForKey:genreKVCIdentifier];
     
     for (NSString *genre in self.genreArray) {
         [self indexGenre:genre];
@@ -117,7 +119,8 @@ static NSString * const kSectionHeaderForAllBooks = @"All Books";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath  {
     
     //TODO: fixed, lower case `C` in cell
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+    NSString *cellID = @"cell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
     
     cell.textLabel.text = [[self.bookArray objectAtIndex:indexPath.row] title];
     return cell;
