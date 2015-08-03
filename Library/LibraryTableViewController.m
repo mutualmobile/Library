@@ -118,7 +118,6 @@ static NSString * const kSectionHeaderForAllBooks = @"All Books";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath  {
     
-    //TODO: fixed, lower case `C` in cell
     NSString *cellID = @"cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
     
