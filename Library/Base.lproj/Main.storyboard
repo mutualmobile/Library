@@ -46,9 +46,6 @@
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
-                                <connections>
-                                    <segue destination="atj-1q-cNB" kind="show" identifier="goToDetail" id="GWB-Ub-R4C"/>
-                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -57,6 +54,9 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Your Library" id="xGi-SG-mlL"/>
+                    <connections>
+                        <segue destination="atj-1q-cNB" kind="show" identifier="goToDetail" id="ukl-b4-Nmz"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Gug-Fs-WTL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

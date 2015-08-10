@@ -15,7 +15,6 @@
 
 @property (strong,nonatomic) Book *book;
 
-//TODO: self in method name is redundant
-- (void)dismissSelfAnimated:(BOOL)animated;
+- (void)dismissAnimated:(BOOL)animated;
     
 @end

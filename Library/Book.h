@@ -10,16 +10,12 @@
 
 @interface Book : NSObject
 
-//TODO: `copy` all NSString cause they have a mutable subclass
-// http://vgable.com/blog/2008/11/14/prefer-copy-over-retain/
+@property (nonatomic, copy) NSString *title;
+@property (nonatomic, copy) NSString *author;
+@property (nonatomic, copy) NSString *bookID;
+@property (nonatomic, copy) NSString *genre;
+@property (nonatomic, copy) NSString *publishingHouse;
 
-@property (strong, nonatomic) NSString *title;
-@property (strong, nonatomic) NSString *author;
-@property (strong, nonatomic) NSString *bookID;
-@property (strong, nonatomic) NSString *genre;
-@property (strong, nonatomic) NSString *publishingHouse;
-
-//TODO: use instanceType
-- (id)initWithDictionary:(NSDictionary *)book;
+- (Book *)initWithDictionary:(NSDictionary *)book;
 
 @end

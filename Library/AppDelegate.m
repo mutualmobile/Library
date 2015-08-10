@@ -54,7 +54,7 @@
         
         if([[rootNavigationController topViewController] isKindOfClass:[BookDetailViewController class]]) {
             BookDetailViewController *bookDetailViewControllerInstance = (BookDetailViewController *)[rootNavigationController topViewController];
-            [bookDetailViewControllerInstance dismissSelfAnimated:NO];
+            [bookDetailViewControllerInstance dismissAnimated:NO];
         }
         
         LibraryTableViewController * libraryTableViewControllerInstance = [rootNavigationController.viewControllers firstObject];

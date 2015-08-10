@@ -14,16 +14,17 @@
 #import "Book.h"
 #import "BookTableViewCell.h"
 
+static NSString * const kContentTypeBook = @"book";
+static NSString * const bookKVCIdentifier = @"books";
+static NSString * const genreKVCIdentifier = @"genres";
+static NSString * const kDomainIdentifierLibrary = @"com.library";
+static NSString * const kSectionHeaderForAllBooks = @"All Books";
+
 @interface LibraryTableViewController ()
-{
-    //TODO:
-    // I prefer properties cause they have manual memory management, getter, setter advantages.
-    // If not, iVars should still have a unique way of identifying them (_ prefix or suffix) to
-    // differentiate from local variables.
-    NSMutableArray *bookArray;
-    NSMutableArray *genreArray;
-    Book *bookToSend;
-}
+
+@property (strong, nonatomic) NSMutableArray *bookArray;
+@property (strong, nonatomic) NSMutableArray *genreArray;
+@property (strong, nonatomic) Book *bookToSend;
 
 @end
 
@@ -39,24 +40,24 @@
 #pragma mark - Deserialization
 - (void)loadBooksFromLibraryAndIndexForSearch {
     NSData *libraryData = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"libraryJSON" ofType:@"json"]];
-    NSArray *library = [[NSJSONSerialization JSONObjectWithData:libraryData options:kNilOptions error:nil] valueForKey:@"books"];
+    NSArray *library = [[NSJSONSerialization JSONObjectWithData:libraryData options:kNilOptions error:nil] valueForKey:bookKVCIdentifier];
     
-    bookArray = [NSMutableArray new];
+    self.bookArray = [NSMutableArray new];
     
     for(NSDictionary *book in library) {
         Book *tempBook = [[Book alloc] initWithDictionary:book];
         [self indexBookForSearch:tempBook];
-        [bookArray addObject:tempBook];
+        [self.bookArray addObject:tempBook];
     }
 }
 
 - (void)loadGenresAndIndexForSearch {
     NSData *genreData = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"genreData" ofType:@"json"]];
     
-    genreArray = [NSMutableArray new];
-    genreArray = [[NSJSONSerialization JSONObjectWithData:genreData options:kNilOptions error:nil] valueForKey:@"genres"];
+    self.genreArray = [NSMutableArray new];
+    self.genreArray = [[NSJSONSerialization JSONObjectWithData:genreData options:kNilOptions error:nil] valueForKey:genreKVCIdentifier];
     
-    for (NSString *genre in genreArray) {
+    for (NSString *genre in self.genreArray) {
         [self indexGenre:genre];
     }
 }
@@ -64,7 +65,7 @@
 #pragma mark - Indexing
 - (void)indexBookForSearch:(Book *)book {
     
-    CSSearchableItemAttributeSet* attributeSet = [[CSSearchableItemAttributeSet alloc] initWithItemContentType:@"book"];
+    CSSearchableItemAttributeSet* attributeSet = [[CSSearchableItemAttributeSet alloc] initWithItemContentType:kContentTypeBook];
     attributeSet.title = book.title;
     attributeSet.authorNames = @[book.author];
     attributeSet.publishers = @[book.publishingHouse];
@@ -72,33 +73,39 @@
     attributeSet.identifier = book.bookID;
     attributeSet.contentDescription = [NSString stringWithFormat:@"Read '%@' using Library now", book.title];
     
-    CSSearchableItem *item = [[CSSearchableItem alloc] initWithUniqueIdentifier:book.bookID domainIdentifier:@"com.library" attributeSet:attributeSet];
+    CSSearchableItem *item = [[CSSearchableItem alloc] initWithUniqueIdentifier:book.bookID domainIdentifier:kDomainIdentifierLibrary attributeSet:attributeSet];
     [[CSSearchableIndex defaultSearchableIndex] indexSearchableItems:@[item] completionHandler: ^(NSError * __nullable error) {
-        NSLog(@"Book indexed");
+        UIAlertController *errorAlertController = [UIAlertController alertControllerWithTitle:@"Indexing error!" message:[NSString stringWithFormat:@"Failed to index a search item.\n\nHere's why;\n%@",error] preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"Dismiss" style:UIAlertActionStyleCancel handler:nil];
+        [errorAlertController addAction:okAction];
+        
+        [self presentViewController:errorAlertController animated:YES completion:nil];
     }];
 }
 
 - (void)indexGenre:(NSString *)genre {
     
-    //TODO: string literal "book" is used in multiple places, make it a constant
-    CSSearchableItemAttributeSet* attributeSet = [[CSSearchableItemAttributeSet alloc] initWithItemContentType:@"book"];
+    CSSearchableItemAttributeSet* attributeSet = [[CSSearchableItemAttributeSet alloc] initWithItemContentType:kContentTypeBook];
     attributeSet.title = genre;
     attributeSet.identifier = genre;
     
     attributeSet.contentDescription = [NSString stringWithFormat:@"Read '%@' books using Library now", genre];
 
-    //TODO: string literal "com.libary" is used in multiple places, make it a constant
-    CSSearchableItem *item = [[CSSearchableItem alloc] initWithUniqueIdentifier:genre domainIdentifier:@"com.library" attributeSet:attributeSet];
+    CSSearchableItem *item = [[CSSearchableItem alloc] initWithUniqueIdentifier:genre domainIdentifier:kDomainIdentifierLibrary attributeSet:attributeSet];
     [[CSSearchableIndex defaultSearchableIndex] indexSearchableItems:@[item] completionHandler: ^(NSError * __nullable error) {
-        //TODO: log error or present an alert
-        NSLog(@"Genre indexed");
+        
+        UIAlertController *errorAlertController = [UIAlertController alertControllerWithTitle:@"Indexing error!" message:[NSString stringWithFormat:@"Failed to index a search item.\n\nHere's why;\n%@",error] preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"Dismiss" style:UIAlertActionStyleCancel handler:nil];
+        [errorAlertController addAction:okAction];
+        
+        [self presentViewController:errorAlertController animated:YES completion:nil];
     }];
 }
 
 #pragma mark - Table view data source
 
 -(NSString *)tableView:(nonnull UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    return @"All Books";
+    return kSectionHeaderForAllBooks;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -106,31 +113,26 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [bookArray count];
+    return [self.bookArray count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath  {
     
-    //TODO: fixed, lower case `C` in cell
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+    NSString *cellID = @"cell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
     
-    //TODO: this isn't required, deque handles it cause the cells are registered by the storyboard
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"cell"];
-    }
-    
-    cell.textLabel.text = [[bookArray objectAtIndex:indexPath.row] title];
+    cell.textLabel.text = [[self.bookArray objectAtIndex:indexPath.row] title];
     return cell;
 }
 
 -(void)tableView:(nonnull UITableView *)tableView didSelectRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
-    Book *book = [bookArray objectAtIndex:[[self.tableView indexPathForSelectedRow] row]];
+    Book *book = [self.bookArray objectAtIndex:[[self.tableView indexPathForSelectedRow] row]];
     [self goToDetailWithBook:book.bookID];
 }
 
 #pragma mark - Convenience Methods
 -(Book *)getBookForBookID:(NSString *)bookID {
-    for(Book *book in bookArray){
+    for(Book *book in self.bookArray){
         if(bookID == book.bookID) {
             return book;
         }
@@ -142,12 +144,12 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if([[segue destinationViewController] isKindOfClass:[BookDetailViewController class]]) {
         BookDetailViewController *vc = [segue destinationViewController];
-        vc.book = bookToSend;
+        vc.book = self.bookToSend;
     }
 }
 
 -(void)goToDetailWithBook:(NSString *)bookID {
-    bookToSend = [self getBookForBookID:bookID];
+    self.bookToSend = [self getBookForBookID:bookID];
     [self performSegueWithIdentifier:@"goToDetail" sender:self];
 }
 
