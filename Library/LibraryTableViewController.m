@@ -75,11 +75,14 @@ static NSString * const kSectionHeaderForAllBooks = @"All Books";
     
     CSSearchableItem *item = [[CSSearchableItem alloc] initWithUniqueIdentifier:book.bookID domainIdentifier:kDomainIdentifierLibrary attributeSet:attributeSet];
     [[CSSearchableIndex defaultSearchableIndex] indexSearchableItems:@[item] completionHandler: ^(NSError * __nullable error) {
-        UIAlertController *errorAlertController = [UIAlertController alertControllerWithTitle:@"Indexing error!" message:[NSString stringWithFormat:@"Failed to index a search item.\n\nHere's why;\n%@",error] preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"Dismiss" style:UIAlertActionStyleCancel handler:nil];
-        [errorAlertController addAction:okAction];
-        
-        [self presentViewController:errorAlertController animated:YES completion:nil];
+        if(error) {
+            UIAlertController *errorAlertController = [UIAlertController alertControllerWithTitle:@"Indexing error!" message:[NSString stringWithFormat:@"Failed to index a search item.\n\nHere's why;\n%@",error] preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"Dismiss" style:UIAlertActionStyleCancel handler:nil];
+            [errorAlertController addAction:okAction];
+            [self presentViewController:errorAlertController animated:YES completion:nil];
+        } else {
+            NSLog(@"Book indexed");
+        }
     }];
 }
 
@@ -93,12 +96,14 @@ static NSString * const kSectionHeaderForAllBooks = @"All Books";
 
     CSSearchableItem *item = [[CSSearchableItem alloc] initWithUniqueIdentifier:genre domainIdentifier:kDomainIdentifierLibrary attributeSet:attributeSet];
     [[CSSearchableIndex defaultSearchableIndex] indexSearchableItems:@[item] completionHandler: ^(NSError * __nullable error) {
-        
-        UIAlertController *errorAlertController = [UIAlertController alertControllerWithTitle:@"Indexing error!" message:[NSString stringWithFormat:@"Failed to index a search item.\n\nHere's why;\n%@",error] preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"Dismiss" style:UIAlertActionStyleCancel handler:nil];
-        [errorAlertController addAction:okAction];
-        
-        [self presentViewController:errorAlertController animated:YES completion:nil];
+        if(error) {
+            UIAlertController *errorAlertController = [UIAlertController alertControllerWithTitle:@"Indexing error!" message:[NSString stringWithFormat:@"Failed to index a search item.\n\nHere's why;\n%@",error] preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"Dismiss" style:UIAlertActionStyleCancel handler:nil];
+            [errorAlertController addAction:okAction];
+            [self presentViewController:errorAlertController animated:YES completion:nil];
+        } else {
+            NSLog(@"Genre item indexed");
+        }
     }];
 }
 
